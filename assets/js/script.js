@@ -3,16 +3,15 @@ var mainWeather = document.querySelector ('.main-weather');
 var searchInputEl = document.querySelector('#search-input');
 var searchButton = document.querySelector('#search-btn');
 var forecastWeather = document.querySelector('.forecast')
-var now = dayjs()
-// 
 
+// function to get the input and calls the function to fetch results
 function getCity (event) {
     event.preventDefault()
     var city = searchInputEl.value
     console.log(city)
     getSearchResults(city)
 }
-//function gets the search from openweather
+//function gets the search from openweather api
 
 function getSearchResults (city) {
     var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=59d0933cc9a4ce76bb2ab24bbae4e56c&units=Imperial`;
@@ -26,6 +25,8 @@ function getSearchResults (city) {
         getForecast (lon,lat)
     })
 }
+
+// function that gets the forecast from the api
 function getForecast(lon,lat){
     var forecastURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=59d0933cc9a4ce76bb2ab24bbae4e56c&units=Imperial`
     fetch(forecastURL)
@@ -38,15 +39,19 @@ function getForecast(lon,lat){
 }
 // function display results of our search
 function displaySearchResults(data){
+
     const card = document.createElement('div')
-    card.setAttribute("class", "card-weatherMain")
+    card.setAttribute("class", "column is-narrow card-weatherMain card")
     const cardHeader = document.createElement('div')
+    cardHeader.setAttribute("class","card-header has-text-white has-text-weight-bold is-uppercase is-size-4")
     const cardTitle = document.createElement('h2')
+    cardTitle.setAttribute ('class', "card-header-title has-text-weight-bold is-align-content-center")
     cardTitle.textContent = data.name
     const icon = document.createElement('img')
     icon.setAttribute("src", "https://openweathermap.org/img/wn/" + data.weather[0].icon + ".png")
     const span = document.createElement('span')
     const cardBody = document.createElement('div')
+    cardBody.setAttribute("class", "card-content")
     const temp = document.createElement('p')
     const humidity = document.createElement('p')
     const wind = document.createElement('p')
@@ -63,73 +68,42 @@ function displaySearchResults(data){
 
 }
 
+// function to display forecast results
+
 function displayForecastResults(data){
-    // for (let i=0; i<5; i++) {
+//    for loop to get the forecast for 5 days length
+    for (var index = 0; index<5; index++){
+      
+        var date = document.createElement("h2")
+        date.textContent = moment().add(index, 'days').format('dddd, MMM DD')
+        date.setAttribute("class", "has-text-white has-text-weight-bold is-uppercase is-size-4")
+        const card = document.createElement('div')
+        card.setAttribute("class", "column is-narrow card card-weatherMain")
+        const cardHeader = document.createElement('div')
+        cardHeader.setAttribute("class","card-header has-text-weight-bold")
+        const cardTitle = document.createElement('h2')
+        cardTitle.setAttribute ('class', "card-header-title title is-4 has-text-weight-bold is-align-content-center")
+        cardTitle.textContent = data.name
+        const icon = document.createElement('img')
+        icon.setAttribute("src", "https://openweathermap.org/img/wn/" + data.list[index].weather[0].icon + ".png")
+        icon.setAttribute("class", "card-image icon is-large fas fa-2x")
+        const span = document.createElement('span')
+        const cardBody = document.createElement('div')
+        cardBody.setAttribute("class", "card-content")
+        const temp = document.createElement('p')
+        const humidity = document.createElement('p')
+        const wind = document.createElement('p')
+        temp.textContent = `Temperature: ${data.list[index].main.temp} F`
+        humidity.textContent = `Humidity: ${data.list[index].main.humidity} %`
+        wind.textContent = `Wind speed: ${data.list[index].wind.speed} MPH`
         
-    // let dataDay = data.list[index].dt_txt.split(' ')[0];
-    // let dataTime = data.list[index].dt_txt.split(' ')[1];
-    
-    // if (index == 0 && dataTime == '00:00:00') {
-    //     let dateTemp = data.list[index].main.temp;
-    //     let dateHumidity = data.list[index].main.humidity;
-    //     let dateWind = data.list[index].wind.speed;
-    //     index++;
-    //     continue;
-    // }}
-    
-    // for (var index = 0; index<5; index++){
-    // forecastWeather.textContent = "";
-    var date = document.createElement("h3")
-    // date.textContent = moment().add(i+1, 'days').format('MM DD')
-    const card = document.createElement('div')
-    card.setAttribute("class", "card-body col-lg-2")
-    card.setAttribute("class", "card-weatherMain")
-    const cardHeader = document.createElement('div')
-    const cardTitle = document.createElement('h2')
-    cardTitle.textContent = data.name
-    const icon = document.createElement('img')
-    icon.setAttribute("src", "https://openweathermap.org/img/wn/" + data.list[0].weather[0].icon + ".png")
-    const span = document.createElement('span')
-    const cardBody = document.createElement('div')
-    const temp = document.createElement('p')
-    const humidity = document.createElement('p')
-    const wind = document.createElement('p')
-    temp.textContent = `Temperature: ${data.list[0].main.temp} F`
-    humidity.textContent = `Humidity: ${data.list[0].main.humidity} %`
-    wind.textContent = `Wind speed: ${data.list[0].wind.speed} MPH`
-
-    span.append(icon)
-    cardTitle.append(span)
-    cardHeader.append(cardTitle)
-    cardBody.append(temp,humidity,wind)
-    card.append(date, cardHeader,cardBody)
-    forecastWeather.append(card)
-
-    var date1 = document.createElement("h3")
-    // date.textContent = moment().add(i+1, 'days').format('MM DD')
-    const card1 = document.createElement('div')
-    card1.setAttribute("class", "card-body col-lg-2")
-    card1.setAttribute("class", "card-weatherMain")
-    const cardHeader1 = document.createElement('div')
-    const cardTitle1 = document.createElement('h2')
-    cardTitle1.textContent = data.name
-    const icon1 = document.createElement('img')
-    icon1.setAttribute("src", "https://openweathermap.org/img/wn/" + data.list[1].weather[0].icon + ".png")
-    const span1 = document.createElement('span')
-    const cardBody1 = document.createElement('div')
-    const temp1 = document.createElement('p')
-    const humidity1 = document.createElement('p')
-    const wind1 = document.createElement('p')
-    temp1.textContent = `Temperature: ${data.list[1].main.temp} F`
-    humidity1.textContent = `Humidity: ${data.list[1].main.humidity} %`
-    wind1.textContent = `Wind speed: ${data.list[1].wind.speed} MPH`
-
-    span1.append(icon1)
-    cardTitle1.append(span1)
-    cardHeader1.append(cardTitle1)
-    cardBody1.append(temp1,humidity1,wind1)
-    card1.append(date1, cardHeader1,cardBody1)
-    forecastWeather.append(card1)
+        span.append(icon)
+        cardTitle.append(span, date)
+        cardHeader.append(cardTitle)
+        cardBody.append(temp,humidity,wind)
+        card.append(date, cardHeader,cardBody)
+        forecastWeather.append(card)
+       }
 }
-
+// Event Listener for check the weather button
 searchButton.addEventListener("click", getCity);
