@@ -13,7 +13,7 @@ function getCity (event) {
     var city = searchInputEl.value
     console.log(city)
     getSearchResults(city)
-    saveHistory(city);
+    // saveHistory(city);
 }
 //function gets the search from openweather api
 
