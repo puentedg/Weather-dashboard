@@ -122,8 +122,8 @@ function renderHistory() {
         let userHistoryItem = document.createElement("li");
         const btn = document.createElement("button");
         btn.textContent = element;
-        btn.setAttribute("class", "button is-warning is-medium is-hovered is-size-5 is-capitalized has-text-weight-semibold has-text-info-dark")
-        userHistoryItem.setAttribute("class", "search-history-item");
+        btn.setAttribute("class", "button is-warning is-medium is-hovered is-size-5 is-capitalized has-text-weight-semibold has-text-info-dark mb-3")
+        userHistoryItem.setAttribute("class", "search-history-item is-justify-content-center");
         userHistoryItem.append(btn)
         historySelector.append(userHistoryItem);
     })
