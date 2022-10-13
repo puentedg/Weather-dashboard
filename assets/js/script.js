@@ -3,10 +3,11 @@ var mainWeather = document.querySelector ('.main-weather');
 var searchInputEl = document.querySelector('#search-input');
 var searchButton = document.querySelector('#search-btn');
 var forecastWeather = document.querySelector('.forecast')
-let historySelector = document.querySelector("#history-selector")
+let historySelector = document.querySelector('#history-selector')
+// let historySelector = document.querySelector("#history-selector")
 let userHistory=document.querySelector('#search-history');
 let historyCache = [];
-let localStorageKey = "searched-city"
+
 // function to get the input and calls the function to fetch results
 function getCity (event) {
     event.preventDefault()
@@ -110,72 +111,73 @@ function displayForecastResults(data){
        }
 }
 
-// function renderHistory() {
-//     // if any history objects are disabled, do not delete them
-//     // load the history onto the page using a foreach
-//     historySelector.empty();
-//     historyCache.forEach (element => {
-//         let userHistoryItem= $("<button>");
-//         userHistoryItem.text();
-//         userHistoryItem.attr("class", "search-history-item");
-//         userHistoryItem.text(element);
-//         userHistoryItem.val(element);
+function renderHistory() {
+    // if any history objects are disabled, do not delete them
+    // load the history onto the page using a foreach
+    historySelector.empty();
+    historyCache.forEach (element => {
+        let userHistoryItem= $("<button>");
+        userHistoryItem.text();
+        userHistoryItem.attr("class", "search-history-item");
+        userHistoryItem.text(element);
+        userHistoryItem.val(element);
 
-//         historySelector.append(userHistoryItem);
-//     })
-//     // created a variable for search history and added an area to append the history
-// }
+        historySelector.append(userHistoryItem);
+    })
+    // created a variable for search history and added an area to append the history
+}
 
-// // this function loads the history from localstorage from the localStorageKey and parses it from json
-// function loadHistory() {
-//     let history = JSON.parse(localStorage.getItem(localStorageKey));
-//     if (history !== null) {
-//         historyCache = history;
-//     }
+// This function loads the history from localstorage from the localStorageKey and parses it from json
+function loadHistory() {
+    let history = JSON.parse(localStorage.getItem("searchResult"));
+    console.log(history)
+    
+    const historyEl = document.getElementById("history-selector");
+    userHistory.setAttribute("style","display:flex")
+    historyEl.innerHTML = "";
+// Append each of the history in the JSON object
+for (let i = 0; i < history.length; i++) {
+    let historyItem = document.createElement("li");
+    historyItem.textContent = `${history[i]}`
+    historyEl.appendChild(historyItem); 
+  }
 
-//     console.log(historyCache)
+    console.log(historyCache)
    
-//     renderHistory();
-// }
+    renderHistory();
+}
 
 // // if the search history has the same term already, it is moved to the start of the list
-// function saveHistory(city) {
-//     // check the historyCache for any terms which are === to the city
-//     // If a element is === to city, splice it from the array
-//     for (const index in historyCache) {
-//         if (historyCache[index] === city) {
-//             historyCache.splice(index, 1);
-//         }
-//     }
-//     // check if city is null or "", if it is etiher, return;
-//     if (city == null || city == "") {
-//         console.log ("variable is null or undefined");
-//         return;
-//     }
-//     // insert the city at the beginning of the historycache
-//     historyCache.unshift(city);
-//     // stringify the historycache and save it to localstorage in the localStorageKey
-//     localStorage.setItem(localStorageKey, JSON.stringify(historyCache));
+function saveHistory(city) {
+    // check the historyCache for any terms which are === to the city
+    // If a element is === to city, splice it from the array
+    for (const index in historyCache) {
+        if (historyCache[index] === city) {
+            historyCache.splice(index, 1);
+        }
+    }
+    // check if city is null or "", if it is etiher, return;
+    if (city == null || city == "") {
+        console.log ("variable is null or undefined");
+        return;
+    }
 
-//     console.log(historyCache)
-//     console.log(city)
-//     renderHistory();
-// }
-// loadHistory();
-
+loadHistory();
+}
 // Event Listener for check the weather button
 searchButton.addEventListener("click", getCity);
 
-// // this button starts a search based on the term inside it
-// function historyButtonClicked(event) {
-//     event.preventDefault();
+// this button starts a search based on the term inside it
+function historyButtonClicked(event) {
+    event.preventDefault();
     
-//     var userHistoryEl = $(event.target).text();
-//     saveHistory(userHistoryEl);
-//     getSearchResults(userHistoryEl);
-// }
+    var userHistoryEl = $(event.target).text();
+    saveHistory(userHistoryEl);
+    getSearchResults(userHistoryEl);
+}
 
-// // listen for change event on history buttons then pass to historyButtonClicked
-// historySelector.on("click", ".search-history-item",historyButtonClicked);
+// listen for change event on history buttons then pass to historyButtonClicked
+
+historySelector.addEventListener("click", historyButtonClicked);
 
 
