@@ -14,7 +14,8 @@ function getCity (event) {
     var city = searchInputEl.value
     console.log(city)
     getSearchResults(city)
-    // saveHistory(city);
+    saveHistory(city);
+    renderHistory();
 }
 //function gets the search from openweather api
 
@@ -44,7 +45,7 @@ function getForecast(lon,lat){
 }
 // function display results of our search
 function displaySearchResults(data){
-
+    mainWeather.innerHTML ="";
     const card = document.createElement('div')
     card.setAttribute("class", "column is-narrow card-weatherMain card")
     const cardHeader = document.createElement('div')
@@ -76,6 +77,7 @@ function displaySearchResults(data){
 // function to display forecast results
 
 function displayForecastResults(data){
+    forecastWeather.innerHTML="";
 //    for loop to get the forecast for 5 days length
     for (var index = 0; index<5; index++){
       
@@ -83,7 +85,7 @@ function displayForecastResults(data){
         date.textContent = moment().add(index, 'days').format('dddd, MMM DD')
         date.setAttribute("class", "has-text-white has-text-weight-bold is-uppercase is-size-4")
         const card = document.createElement('div')
-        card.setAttribute("class", "column is-narrow card card-weatherMain")
+        card.setAttribute("class", "card card-weatherMain")
         const cardHeader = document.createElement('div')
         cardHeader.setAttribute("class","card-header has-text-weight-bold")
         const cardTitle = document.createElement('h2')
@@ -91,7 +93,7 @@ function displayForecastResults(data){
         cardTitle.textContent = data.name
         const icon = document.createElement('img')
         icon.setAttribute("src", "https://openweathermap.org/img/wn/" + data.list[index].weather[0].icon + ".png")
-        icon.setAttribute("class", "card-image icon is-large fas fa-2x")
+        icon.setAttribute("class", "weather-icon")
         const span = document.createElement('span')
         const cardBody = document.createElement('div')
         cardBody.setAttribute("class", "card-content")
@@ -114,14 +116,15 @@ function displayForecastResults(data){
 function renderHistory() {
     // if any history objects are disabled, do not delete them
     // load the history onto the page using a foreach
-    historySelector.empty();
+    // historySelector.innerHTML="";
+    console.log(historyCache);
     historyCache.forEach (element => {
-        let userHistoryItem= $("<button>");
-        userHistoryItem.text();
-        userHistoryItem.attr("class", "search-history-item");
-        userHistoryItem.text(element);
-        userHistoryItem.val(element);
-
+        let userHistoryItem = document.createElement("li");
+        const btn = document.createElement("button");
+        btn.textContent = element;
+        btn.setAttribute("class", "button is-warning is-medium is-hovered is-size-5 is-capitalized has-text-weight-semibold has-text-info-dark")
+        userHistoryItem.setAttribute("class", "search-history-item");
+        userHistoryItem.append(btn)
         historySelector.append(userHistoryItem);
     })
     // created a variable for search history and added an area to append the history
@@ -129,37 +132,32 @@ function renderHistory() {
 
 // This function loads the history from localstorage from the localStorageKey and parses it from json
 function loadHistory() {
-    let history = JSON.parse(localStorage.getItem("searchResult"));
+    let history = JSON.parse(localStorage.getItem("searchResult")) || [];
     console.log(history)
     
     const historyEl = document.getElementById("history-selector");
     userHistory.setAttribute("style","display:flex")
     historyEl.innerHTML = "";
-// Append each of the history in the JSON object
-for (let i = 0; i < history.length; i++) {
-    let historyItem = document.createElement("li");
-    historyItem.textContent = `${history[i]}`
-    historyEl.appendChild(historyItem); 
-  }
 
     console.log(historyCache)
    
-    renderHistory();
+    
 }
 
-// // if the search history has the same term already, it is moved to the start of the list
+// if the search history has the same term already, it is moved to the start of the list
 function saveHistory(city) {
-    // check the historyCache for any terms which are === to the city
-    // If a element is === to city, splice it from the array
-    for (const index in historyCache) {
-        if (historyCache[index] === city) {
-            historyCache.splice(index, 1);
-        }
+
+    if (!historyCache.includes(city)){
+        historyCache.push(city)
+        localStorage.setItem("searchResult", JSON.stringify(historyCache));
+        console.log(historyCache);
     }
+
     // check if city is null or "", if it is etiher, return;
     if (city == null || city == "") {
         console.log ("variable is null or undefined");
         return;
+
     }
 
 loadHistory();
@@ -172,7 +170,7 @@ function historyButtonClicked(event) {
     event.preventDefault();
     
     var userHistoryEl = $(event.target).text();
-    saveHistory(userHistoryEl);
+    
     getSearchResults(userHistoryEl);
 }
 

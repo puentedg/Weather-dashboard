@@ -12,19 +12,15 @@ body {
 .card-weatherMain {
     background-color: rgb(66, 192, 192);
     color: rgb(255, 250, 250);  
-    font-size:20px;
+    font-size:16px;
     font-weight: bold;
+    margin-left: 2vw;
 }
-.weather-container {
-    flex: 1 1 100%;
-    border: none;
-    justify-content: space-between;
-    min-height: 250px;
+.weather-icon {
+    width: 100px;
+    height: 100px;
 }
-/* .forecast {
-    display: flex;
-    flex-direction: column;
-} */
+
 .sun-icon{
     width: 15%;
     margin: 0 auto;
@@ -38,11 +34,8 @@ body {
       stroke: hsl(44, 100%, 60%);
       transition: all .4s;
     }
-#footer {
-        position: fixed; 
-        bottom: 0; 
-        left: 0; 
-        right: 0;
+#footer-id {
+        justify-content: center;
         height: 100px;
         padding: 3rem 1.5rem 2rem
 }
