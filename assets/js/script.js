@@ -15,7 +15,7 @@ function getCity (event) {
     console.log(city)
     getSearchResults(city)
     saveHistory(city);
-    renderHistory();
+    // renderHistory();
 }
 //function gets the search from openweather api
 
@@ -115,8 +115,7 @@ function displayForecastResults(data){
 
 function renderHistory() {
     // if any history objects are disabled, do not delete them
-    // load the history onto the page using a foreach
-    // historySelector.innerHTML="";
+   
     console.log(historyCache);
     historyCache.forEach (element => {
         let userHistoryItem = document.createElement("li");
@@ -135,22 +134,23 @@ function loadHistory() {
     let history = JSON.parse(localStorage.getItem("searchResult")) || [];
     console.log(history)
     
-    const historyEl = document.getElementById("history-selector");
     userHistory.setAttribute("style","display:flex")
-    historyEl.innerHTML = "";
+    historySelector.innerHTML = "";
 
     console.log(historyCache)
-   
+
+    renderHistory()
     
 }
 
 // if the search history has the same term already, it is moved to the start of the list
 function saveHistory(city) {
 
-    if (!historyCache.includes(city)){
+    if (historyCache.includes(city)){
         historyCache.push(city)
         localStorage.setItem("searchResult", JSON.stringify(historyCache));
         console.log(historyCache);
+        console.log(historyCache.length);
     }
 
     // check if city is null or "", if it is etiher, return;
